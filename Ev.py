@@ -36,3 +36,34 @@ if uploaded_file:
         'GradientBoosting': GradientBoostingRegressor(n_estimators=100, random_state=42)
     }
   # This Code is made by Anshika Singh
+
+ # Step 3: User selects target to predict
+    selected_target = st.selectbox("Select the target variable to predict", targets)
+
+    # Features and label
+    X = df.drop(columns=targets)
+    y = df[selected_target]
+
+    # Train-test split
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+    # Train and evaluate
+    st.subheader(f"Model Results for Target: {selected_target}")
+    for name, model in models.items():
+        model.fit(X_train, y_train)
+        preds = model.predict(X_test)
+
+        mse = mean_squared_error(y_test, preds)
+        r2 = r2_score(y_test, preds)
+
+        st.write(f"**{name}**")
+        st.write(f"- MSE: {mse:.2f}")
+        st.write(f"- R² Score: {r2:.2f}")
+
+        # Display predictions
+        results_df = pd.DataFrame({
+            f'{selected_target}_Actual': y_test.values,
+            f'{selected_target}_Predicted_{name}': preds
+        })
+        st.write(results_df.head())
+        
