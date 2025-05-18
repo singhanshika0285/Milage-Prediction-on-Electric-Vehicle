@@ -66,4 +66,12 @@ if uploaded_file:
             f'{selected_target}_Predicted_{name}': preds
         })
         st.write(results_df.head())
-        
+
+    # Download predictions (optional)
+    st.markdown("### Download all model predictions")
+    all_results = pd.concat([results_df], axis=1)
+    st.download_button(
+        label="Download Results as Excel",
+        data=all_results.to_excel(index=False, engine='openpyxl'),
+        file_name='ElectricCar_Predictions.xlsx'
+    )
